@@ -2,6 +2,8 @@
 
 import { useState, FormEvent } from "react";
 
+import swal from "@/lib/sweetalert";
+
 const Createuser = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -10,6 +12,13 @@ const Createuser = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setDisabled(true);
+    if (!username || !password) {
+      return swal.fire({
+        icon: "error",
+        title: "Username or password not provided",
+        text: "Please enter username and  password",
+      });
+    }
   };
 
   return (
@@ -21,6 +30,7 @@ const Createuser = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="form-control m-2"
+          required
         />
         <label className="m-2">password:</label>
         <input
@@ -29,6 +39,7 @@ const Createuser = () => {
           onChange={(e) => setPassword(e.target.value)}
           className="form-control m-2"
           type="password"
+          required
         />
       </div>
       <button type="submit" className="btn btn-primary m-2" disabled={disabled}>
