@@ -22,5 +22,5 @@ export async function POST(req: Request) {
       password: hash,
     },
   });
-  return new Response(JSON.stringify({ username, hash }));
+  return new Response(JSON.stringify({ hash }));
 }
