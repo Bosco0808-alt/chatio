@@ -23,14 +23,27 @@ const Createuser = () => {
         title: "Username or password not provided",
         text: "Please enter username and  password",
       });
+      setDisabled(false);
       return;
     }
-    startTransition(() => createuser(username, password));
-    await swal.fire({
-      icon: "success",
-      title: "User created successfully",
+
+    startTransition(async () => {
+      const { error } = await createuser(username, password);
+      if (error) {
+        await swal.fire({
+          icon: "error",
+          title: "Username invalid",
+          text: "The username is already in use",
+        });
+        setDisabled(false);
+        return;
+      }
+      await swal.fire({
+        icon: "success",
+        title: "User created successfully",
+      });
+      router.replace("/todo");
     });
-    router.replace("/todo");
   };
   return (
     <form onSubmit={handleSubmit}>
