@@ -1,26 +1,15 @@
 "use client";
-
-import { useState, FormEvent } from "react";
+import Link from "next/link";
+import { useState, FormEvent, useTransition } from "react";
+import swal from "@/lib/sweetalert";
+import { login } from "../actions";
 import { useRouter } from "next/navigation";
 
-import swal from "@/lib/sweetalert";
-import Link from "next/link";
-
-type code =
-  | "BAD_REQUEST_BODY"
-  | "ERR_NOT_AUTHENICATED"
-  | "USERNAME_CONFLICT"
-  | "SUCCESS";
-
-interface Resbody {
-  error: boolean;
-  code: code;
-}
-
-const Createuser = () => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [, startTransition] = useTransition();
   const router = useRouter();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,46 +23,17 @@ const Createuser = () => {
       setDisabled(false);
       return;
     }
-
-    // create user
-    const headers = new Headers();
-    headers.append("Authorization", process.env.NEXT_PUBLIC_AUTHKEY || "");
-    const res = await fetch("/api/createuser", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
-    const { error, code }: Resbody = await res.json();
-
-    // success
-    if (!error) {
-      await swal.fire({
-        icon: "success",
-        title: "User created successfully",
-      });
+    startTransition(async () => {
+      const { error } = await login(username, password);
+      if (error) {
+        await swal.fire({
+          icon: "error",
+          title: "Username or password incorrect!",
+        });
+        setDisabled(false);
+        return;
+      }
       router.push("/chat");
-      return;
-    }
-    // error
-
-    // username conflict
-    if (code === "USERNAME_CONFLICT") {
-      await swal.fire({
-        icon: "error",
-        title: "Invalid username",
-        text: "Username is already taken",
-      });
-      return;
-    }
-
-    // other errors
-    await swal.fire({
-      icon: "error",
-      title: "Oops, an error occured.",
-      text: process.env.NODE_ENV === "production" ? undefined : code,
     });
   };
   return (
@@ -106,15 +66,15 @@ const Createuser = () => {
         ) : (
           ""
         )}
-        Create user
+        Login
       </button>
       <br />
       <br />
       <span className="m-2">
-        Already have an account? <Link href={"/login"}>login</Link>
+        Don't have an account? <Link href={"/createuser"}>Create user</Link>
       </span>
     </form>
   );
 };
 
-export default Createuser;
+export default Login;
