@@ -1,15 +1,25 @@
 "use client";
 import Link from "next/link";
-import { useState, FormEvent, useTransition } from "react";
+import { useState, FormEvent } from "react";
 import swal from "@/lib/sweetalert";
-import { login } from "../actions";
 import { useRouter } from "next/navigation";
+
+type code =
+  | "BAD_REQUEST_BODY"
+  | "ERR_NOT_AUTHENICATED"
+  | "INVALID_USERNAME"
+  | "PASSWORD_INCORRECT"
+  | "SUCCESS";
+
+interface Resbody {
+  code: code;
+  error: boolean;
+}
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [, startTransition] = useTransition();
   const router = useRouter();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,18 +33,38 @@ const Login = () => {
       setDisabled(false);
       return;
     }
-    startTransition(async () => {
-      const { error } = await login(username, password);
-      if (error) {
-        await swal.fire({
-          icon: "error",
-          title: "Username or password incorrect!",
-        });
-        setDisabled(false);
-        return;
-      }
-      router.push("/chat");
+    const headers = new Headers();
+    headers.append("Authorization", process.env.NEXT_PUBLIC_AUTHKEY || "");
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        username,
+        password,
+      }),
     });
+    const { code, error }: Resbody = await res.json();
+    if (!error) {
+      await swal.fire({
+        icon: "success",
+        title: "Login successful",
+      });
+      router.push("/chat");
+      return;
+    }
+    if (code === "INVALID_USERNAME" || code === "PASSWORD_INCORRECT") {
+      await swal.fire({
+        icon: "error",
+        title: "Username or password incorrect",
+      });
+      return;
+    }
+    await swal.fire({
+      icon: "error",
+      title: "Oops, an error occured!",
+      text: process.env.NODE_ENV === "production" ? undefined : code,
+    });
+    return;
   };
   return (
     <form onSubmit={handleSubmit}>
