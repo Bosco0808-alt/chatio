@@ -57,6 +57,7 @@ const Login = () => {
         icon: "error",
         title: "Username or password incorrect",
       });
+      setDisabled(false);
       return;
     }
     await swal.fire({

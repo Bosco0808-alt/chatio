@@ -66,6 +66,7 @@ const Createuser = () => {
         title: "Invalid username",
         text: "Username is already taken",
       });
+      setDisabled(false);
       return;
     }
 
