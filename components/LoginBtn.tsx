@@ -1,28 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo } from "react";
-import {
-  addCookieChangeListener,
-  removeCookieChangeListener,
-} from "@/lib/cookiemanager";
-import Cookies from "js-cookie";
+import { FC, useState } from "react";
 import swal from "@/lib/sweetalert";
 
-const LoginButton = () => {
-  const [cookieValue, setCookieValue] = useState(Cookies.get("username"));
-  const auth = useMemo(() => Boolean(cookieValue), [cookieValue]);
-  useEffect(() => {
-    const handleCookieChange = () => {
-      setCookieValue(Cookies.get("username"));
-    };
+interface LoginButtonProps {
+  auth: boolean;
+}
 
-    addCookieChangeListener(handleCookieChange);
-
-    return () => {
-      removeCookieChangeListener(handleCookieChange);
-    };
-  }, []);
+const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
   const router = useRouter();
   const onClick = async () => {
     if (!auth) {
