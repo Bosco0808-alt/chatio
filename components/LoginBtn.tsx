@@ -1,18 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
+import {
+  addCookieChangeListener,
+  removeCookieChangeListener,
+} from "@/lib/cookiemanager";
+import Cookies from "js-cookie";
 import swal from "@/lib/sweetalert";
 
-interface LoginButtonProps {
-  auth: boolean;
-}
+const LoginButton = () => {
+  const [cookieValue, setCookieValue] = useState(Cookies.get("username"));
+  const auth = useMemo(() => Boolean(cookieValue), [cookieValue]);
+  useEffect(() => {
+    const handleCookieChange = () => {
+      setCookieValue(Cookies.get("username"));
+    };
 
-const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
-  const [_auth, setAuth] = useState(auth);
+    addCookieChangeListener(handleCookieChange);
+
+    return () => {
+      removeCookieChangeListener(handleCookieChange);
+    };
+  }, []);
   const router = useRouter();
   const onClick = async () => {
-    if (!_auth) {
+    if (!auth) {
       router.push("/login");
       return;
     }
@@ -31,12 +44,11 @@ const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
       } catch (e) {
         return;
       }
-      setAuth(false);
     }
   };
   return (
     <button onClick={onClick} className="btn btn-primary">
-      {_auth ? "logout" : "login"}
+      {auth ? "logout" : "login"}
     </button>
   );
 };
