@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useState, FormEvent } from "react";
 import swal from "@/lib/sweetalert";
 import { useRouter } from "next/navigation";
+import { usernameAtom, authAtom } from "@/atomconfig";
+import { useAtom } from "jotai";
 
 type code =
   | "BAD_REQUEST_BODY"
@@ -20,6 +22,8 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [disabled, setDisabled] = useState(false);
+  const [_auth, set_auth] = useAtom(authAtom);
+  const [_username, set_username] = useAtom(usernameAtom);
   const router = useRouter();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,6 +53,8 @@ const Login = () => {
         icon: "success",
         title: "Login successful",
       });
+      set_auth(true);
+      set_username(username);
       router.push("/chat");
       return;
     }

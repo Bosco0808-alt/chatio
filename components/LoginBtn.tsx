@@ -1,17 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import swal from "@/lib/sweetalert";
+import { authAtom, usernameAtom } from "@/atomconfig";
+import { useAtom } from "jotai";
 
 interface LoginButtonProps {
   auth: boolean;
 }
 
 const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
+  const [_auth, set_auth] = useAtom(authAtom);
+  useEffect(() => {
+    set_auth(auth);
+  }, [auth]);
   const router = useRouter();
   const onClick = async () => {
-    if (!auth) {
+    if (!_auth) {
       router.push("/login");
       return;
     }
@@ -27,14 +33,20 @@ const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
       headers.append("Authorization", process.env.NEXT_PUBLIC_AUTHKEY || "");
       try {
         const res = await fetch("/api/logout", { headers });
+        const resBody: { error: boolean } = await res.json();
+        if (resBody.error) {
+          throw ":(";
+        }
       } catch (e) {
+        console.error(e);
         return;
       }
+      set_auth(false);
     }
   };
   return (
     <button onClick={onClick} className="btn btn-primary">
-      {auth ? "logout" : "login"}
+      {_auth ? "logout" : "login"}
     </button>
   );
 };
