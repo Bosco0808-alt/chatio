@@ -18,15 +18,8 @@ async function Navbar() {
       <Link href="/createuser" className="navbar-nav nav-item nav-link m-2">
         Create user
       </Link>
-      <div className="nav-item nav-link m-2">
-        <span
-          className="mr-2"
-          style={{ paddingRight: 50, pointerEvents: "none" }}
-        >
-          {username}
-        </span>
-        <LoginButton auth={auth}></LoginButton>
-      </div>
+
+      <LoginButton auth={auth} username={username}></LoginButton>
     </nav>
   );
 }

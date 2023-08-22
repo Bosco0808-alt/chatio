@@ -8,11 +8,16 @@ import { useAtom } from "jotai";
 
 interface LoginButtonProps {
   auth: boolean;
+  username: string | undefined;
 }
-
-const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
+const LoginButton: FC<LoginButtonProps> = ({
+  auth,
+  username,
+}: LoginButtonProps) => {
+  const [_username, set_username] = useAtom(usernameAtom);
   const [_auth, set_auth] = useAtom(authAtom);
   useEffect(() => {
+    set_username(username || "");
     set_auth(auth);
   }, [auth]);
   const router = useRouter();
@@ -42,12 +47,22 @@ const LoginButton: FC<LoginButtonProps> = ({ auth }: LoginButtonProps) => {
         return;
       }
       set_auth(false);
+      set_username("");
+      router.push("/");
     }
   };
   return (
-    <button onClick={onClick} className="btn btn-primary">
-      {_auth ? "logout" : "login"}
-    </button>
+    <div className="nav-item nav-link m-2">
+      <span
+        className="mr-2"
+        style={{ paddingRight: 50, pointerEvents: "none" }}
+      >
+        {_username}
+      </span>
+      <button onClick={onClick} className="btn btn-primary">
+        {_auth ? "logout" : "login"}
+      </button>
+    </div>
   );
 };
 
