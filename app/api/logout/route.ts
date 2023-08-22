@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { cookies, headers } from "next/headers";
 
 export async function GET(req: Request) {
