@@ -1,19 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import swal from "@/lib/sweetalert";
 import { authAtom, usernameAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
+import Link from "next/link";
 
-interface LoginButtonProps {
+interface NavbarSkeletonProps {
   auth: boolean;
   username: string | undefined;
 }
-const LoginButton: FC<LoginButtonProps> = ({
+const NavbarSkeleton: FC<NavbarSkeletonProps> = ({
   auth,
   username,
-}: LoginButtonProps) => {
+}: NavbarSkeletonProps) => {
   const [_username, set_username] = useAtom(usernameAtom);
   const [_auth, set_auth] = useAtom(authAtom);
   useEffect(() => {
@@ -21,7 +22,7 @@ const LoginButton: FC<LoginButtonProps> = ({
     set_auth(auth);
   }, [auth]);
   const router = useRouter();
-  const onClick = async () => {
+  const handleButtonClick = async () => {
     if (!_auth) {
       router.push("/login");
       return;
@@ -52,18 +53,27 @@ const LoginButton: FC<LoginButtonProps> = ({
     }
   };
   return (
-    <div className="nav-item nav-link m-2">
-      <span
-        className="mr-2"
-        style={{ paddingRight: 50, pointerEvents: "none" }}
-      >
-        {_username}
-      </span>
-      <button onClick={onClick} className="btn btn-primary">
-        {_auth ? "logout" : "login"}
-      </button>
-    </div>
+    <nav className="navbar navbar-light bg-light fixed-top">
+      <Link href="/" className="navbar-brand m-2">
+        {!_auth ? "Chatio" : ""}
+      </Link>
+      <Link href="/createuser" className="navbar-nav nav-item nav-link m-2">
+        {!_auth ? "Create user" : ""}
+      </Link>
+
+      <div className="nav-item nav-link m-2">
+        <span
+          className="mr-2"
+          style={{ paddingRight: 50, pointerEvents: "none" }}
+        >
+          {_username}
+        </span>
+        <button onClick={handleButtonClick} className="btn btn-primary">
+          {_auth ? "logout" : "login"}
+        </button>
+      </div>
+    </nav>
   );
 };
 
-export default LoginButton;
+export default NavbarSkeleton;
