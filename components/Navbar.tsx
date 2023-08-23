@@ -1,14 +1,11 @@
-import verify from "@/utils/verify";
 import NavbarSkeleton from "./NavbarSkeleton";
 
-interface Resbody {
-  error: boolean;
+interface NavbarProps {
   auth: boolean;
   username: string | undefined;
 }
 
-async function Navbar() {
-  const { auth, error, username }: Resbody = await verify();
+async function Navbar({ auth, username }: NavbarProps) {
   return <NavbarSkeleton auth={auth} username={username} />;
 }
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import swal from "@/lib/sweetalert";
 import Link from "next/link";
 import { usernameAtom, authAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
+import useRedirectIfLoggedIn from "@/utils/useredirectifloggedin";
 
 type code =
   | "BAD_REQUEST_BODY"
@@ -26,6 +27,7 @@ const Createuser = () => {
   const [_auth, set_auth] = useAtom(authAtom);
   const [_username, set_username] = useAtom(usernameAtom);
   const router = useRouter();
+  useRedirectIfLoggedIn();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setDisabled(true);

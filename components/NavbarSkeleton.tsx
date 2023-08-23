@@ -20,7 +20,7 @@ const NavbarSkeleton: FC<NavbarSkeletonProps> = ({
   useEffect(() => {
     set_username(username || "");
     set_auth(auth);
-  }, [auth]);
+  }, []);
   const router = useRouter();
   const handleButtonClick = async () => {
     if (!_auth) {
