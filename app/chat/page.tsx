@@ -2,13 +2,8 @@
 
 import { friendsAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
-import { useEffect } from "react";
 
 const Chat = () => {
-  useEffect(() => {
-    console.log(_friends.length);
-  });
-
   const [_friends] = useAtom(friendsAtom);
   const test = ["john", "doe", "sussy"];
   return (
