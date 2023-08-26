@@ -11,12 +11,15 @@ export default async function verify() {
       error: true,
       auth: false,
       username,
-      password,
+      friends: [],
     };
   }
   const user = await prisma.user.findUnique({
     where: {
       username,
+    },
+    include: {
+      friends: true,
     },
   });
   if (!user) {
@@ -24,17 +27,23 @@ export default async function verify() {
       error: false,
       auth: false,
       username,
-      password,
+      friends: [],
     };
   }
   const auth = timingSafeEqual(
     Buffer.from(password || "", "hex"),
     Buffer.from(user.password, "hex")
   );
+
+  const { friends: _friends } = user;
+  const friends = _friends.map((f) => {
+    const { password, ...friend } = f;
+    return friend;
+  });
   return {
     error: false,
     auth,
     username,
-    password,
+    friends: auth ? friends : [],
   };
 }

@@ -3,23 +3,30 @@
 import { useRouter } from "next/navigation";
 import { FC, useEffect } from "react";
 import swal from "@/lib/sweetalert";
-import { authAtom, usernameAtom } from "@/atomconfig";
+import { authAtom, friendsAtom, usernameAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
 import Link from "next/link";
 
 interface NavbarSkeletonProps {
   auth: boolean;
   username: string | undefined;
+  friends: {
+    id: string;
+    username: string;
+  }[];
 }
 const NavbarSkeleton: FC<NavbarSkeletonProps> = ({
   auth,
   username,
+  friends,
 }: NavbarSkeletonProps) => {
   const [_username, set_username] = useAtom(usernameAtom);
   const [_auth, set_auth] = useAtom(authAtom);
+  const [_friends, set_friends] = useAtom(friendsAtom);
   useEffect(() => {
     set_username(username || "");
     set_auth(auth);
+    set_friends(friends);
   }, []);
   const router = useRouter();
   const handleButtonClick = async () => {

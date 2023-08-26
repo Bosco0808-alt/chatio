@@ -14,12 +14,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { auth, username } = await verify();
+  const { auth, username, friends } = await verify();
   return (
     <html lang="en">
       <Provider>
         <body className="pt-4">
-          <Navbar auth={auth} username={username} />
+          <Navbar auth={auth} username={username} friends={friends} />
           <div className="pt-5">{children}</div>
         </body>
       </Provider>
