@@ -5,7 +5,6 @@ import { useAtom } from "jotai";
 
 const Chat = () => {
   const [_friends] = useAtom(friendsAtom);
-  const test = ["john", "doe", "sussy"];
   return (
     <div className="container-fluid">
       <div className="row">
