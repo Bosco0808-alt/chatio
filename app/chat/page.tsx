@@ -2,6 +2,7 @@
 
 import { friendsAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
+import Sidebar from "@/components/FriendsSidebar";
 
 const Chat = () => {
   const [_friends] = useAtom(friendsAtom);
@@ -9,20 +10,7 @@ const Chat = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-2 d-none d-md-block">
-          <div
-            className="sidebar bg-light"
-            style={{
-              height: "100vh",
-            }}
-          >
-            <div className="fs-3">Friends</div>
-            <br />
-            {_friends.length !== 0
-              ? _friends.map((f) => (
-                  <div className="sidebar-item">{f.username}</div>
-                ))
-              : "You have no friends"}
-          </div>
+          <Sidebar _friends={_friends}></Sidebar>
         </div>
 
         <div className="col-md-10">

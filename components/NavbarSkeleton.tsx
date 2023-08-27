@@ -62,10 +62,10 @@ const NavbarSkeleton: FC<NavbarSkeletonProps> = ({
   return (
     <nav className="navbar navbar-light bg-light fixed-top">
       <Link href="/" className="navbar-brand m-2">
-        {!_auth ? "Chatio" : ""}
+        {_auth ? "" : "Chatio"}
       </Link>
       <Link href="/createuser" className="navbar-nav nav-item nav-link m-2">
-        {!_auth ? "Create user" : ""}
+        {_auth ? "" : "Create user"}
       </Link>
 
       <div className="nav-item nav-link m-2">
