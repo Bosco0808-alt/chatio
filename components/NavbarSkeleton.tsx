@@ -75,7 +75,10 @@ const NavbarSkeleton: FC<NavbarSkeletonProps> = ({
         >
           {_username}
         </span>
-        <button onClick={handleButtonClick} className="btn btn-primary">
+        <button
+          onClick={handleButtonClick}
+          className={`btn btn-${_auth ? "danger" : "primary"}`}
+        >
           {_auth ? "logout" : "login"}
         </button>
       </div>
