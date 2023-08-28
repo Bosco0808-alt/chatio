@@ -7,7 +7,7 @@ interface SidebarProps {
   }[];
 }
 
-const Sidebar: FC<SidebarProps> = (props: SidebarProps) => {
+const Sidebar: FC<SidebarProps> = ({ _friends }: SidebarProps) => {
   return (
     <div
       className="sidebar bg-light"
@@ -17,10 +17,8 @@ const Sidebar: FC<SidebarProps> = (props: SidebarProps) => {
     >
       <div className="fs-3">Friends</div>
       <br />
-      {props._friends.length !== 0
-        ? props._friends.map((f) => (
-            <div className="sidebar-item">{f.username}</div>
-          ))
+      {_friends.length !== 0
+        ? _friends.map((f) => <div className="sidebar-item">{f.username}</div>)
         : "You have no friends"}
     </div>
   );
