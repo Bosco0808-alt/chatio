@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { FC } from "react";
 interface SidebarProps {
   _friends: {
@@ -24,9 +25,12 @@ const Sidebar: FC<SidebarProps> = ({ _friends }: SidebarProps) => {
       )}
       <button className="btn btn-primary sidebar-item mt-2">add friend</button>
       <br />
-      <button className="btn btn-primary sidebar-item mt-2">
+      <Link
+        className="btn btn-secondary sidebar-item mt-2"
+        href={"/friendRequest"}
+      >
         view friend requests
-      </button>
+      </Link>
     </div>
   );
 };
