@@ -3,19 +3,11 @@
 import { friendsAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
 import Sidebar from "@/components/FriendsSidebar";
-import { authAtom } from "@/atomconfig";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import ChatInterface from "@/components/ChatInterface";
+import useRedirectIfNotLoggedIn from "@/utils/useredirectifnotloggedin";
 
 const Chat = () => {
-  const router = useRouter();
-  const [_auth] = useAtom(authAtom);
-  useEffect(() => {
-    if (!_auth) {
-      router.replace("/");
-    }
-  }, [_auth]);
+  useRedirectIfNotLoggedIn();
   const [_friends] = useAtom(friendsAtom);
   return (
     <div className="container-fluid">
