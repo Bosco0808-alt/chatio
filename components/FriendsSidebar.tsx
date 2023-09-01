@@ -23,6 +23,10 @@ const Sidebar: FC<SidebarProps> = ({ _friends }: SidebarProps) => {
         <div className="sidebar-item">You have no friends</div>
       )}
       <button className="btn btn-primary sidebar-item mt-2">add friend</button>
+      <br />
+      <button className="btn btn-primary sidebar-item mt-2">
+        view friend requests
+      </button>
     </div>
   );
 };
