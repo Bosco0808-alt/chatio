@@ -6,10 +6,11 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest --watchAll --verbose"
   },
   "dependencies": {
-    "@prisma/client": "^5.1.1",
+    "@prisma/client": "^5.2.0",
     "@types/js-cookie": "^3.0.3",
     "@types/node": "20.4.9",
     "@types/react": "18.2.20",
@@ -24,6 +25,13 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "prisma": "^5.1.1"
+    "@types/jest": "^29.5.4",
+    "jest": "^29.6.4",
+    "node-fetch": "^3.3.2",
+    "prisma": "^5.2.0",
+    "ts-jest": "^29.1.1"
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }
