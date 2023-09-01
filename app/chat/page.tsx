@@ -3,8 +3,19 @@
 import { friendsAtom } from "@/atomconfig";
 import { useAtom } from "jotai";
 import Sidebar from "@/components/FriendsSidebar";
+import { authAtom } from "@/atomconfig";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import ChatInterface from "@/components/ChatInterface";
 
 const Chat = () => {
+  const router = useRouter();
+  const [_auth] = useAtom(authAtom);
+  useEffect(() => {
+    if (!_auth) {
+      router.replace("/");
+    }
+  }, [_auth]);
   const [_friends] = useAtom(friendsAtom);
   return (
     <div className="container-fluid">
@@ -14,7 +25,7 @@ const Chat = () => {
         </div>
 
         <div className="col-md-10">
-          <h1>Test</h1>
+          <ChatInterface />
         </div>
       </div>
     </div>
