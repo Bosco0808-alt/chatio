@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 interface SidebarProps {
   _friends: {
     id: string;
