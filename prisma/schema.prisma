@@ -11,20 +11,30 @@ datasource db {
 }
 
 model User {
-  id               String    @id @default(uuid())
-  username         String    @unique
-  password         String
-  friends          User[]    @relation("Friendship")
-  friendsOf        User[]    @relation("Friendship")
-  messagesSent     Message[] @relation("authorRelation")
-  messagesRecieved Message[] @relation("recieverRelation")
+  id                     String          @id @default(uuid())
+  username               String          @unique
+  password               String
+  friends                User[]          @relation("Friendship")
+  friendsOf              User[]          @relation("Friendship")
+  messagesSent           Message[]       @relation("authorMessageRelation")
+  messagesRecieved       Message[]       @relation("recieverRelation")
+  FriendRequestsSend     FriendRequest[] @relation("authorFriendRequestRelation")
+  FriendRequestsRecieved FriendRequest[] @relation("recieverFriendRequestRelation")
 }
 
 model Message {
   id         String @id @default(uuid())
-  author     User   @relation("authorRelation", fields: [authorId], references: [id])
+  author     User   @relation("authorMessageRelation", fields: [authorId], references: [id])
   authorId   String
   reciever   User   @relation("recieverRelation", fields: [recieverId], references: [id])
   recieverId String
   content    String
+}
+
+model FriendRequest {
+  id         String @id @default(uuid())
+  author     User   @relation("authorFriendRequestRelation", fields: [authorId], references: [id])
+  authorId   String
+  reciever   User   @relation("recieverFriendRequestRelation", fields: [recieverId], references: [id])
+  recieverId String
 }
