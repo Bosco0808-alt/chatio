@@ -22,15 +22,10 @@ type viewing = "recieved" | "sent";
 const FriendRequests = () => {
   const router = useRouter();
   // @ts-ignore
-  const viewing: viewing = useSearchParams().get("viewing") || "";
+  const [viewing, setViewing] = useState<viewing>("recieved");
   useRedirectIfNotLoggedIn();
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([]);
   useEffect(() => {
-    if (viewing !== "recieved" && viewing !== "sent") {
-      console.warn("viewing is not recieved or sent");
-      router.replace("/");
-      return;
-    }
     (async () => {
       const headerList = new Headers();
       headerList.set("Authorization", process.env.NEXT_PUBLIC_AUTHKEY || "");
@@ -47,7 +42,7 @@ const FriendRequests = () => {
       }
       setFriendRequests(friendRequests || []);
     })();
-  }, []);
+  }, [viewing]);
 
   return (
     <>
@@ -63,16 +58,18 @@ const FriendRequests = () => {
         <span className="m-2">No friend requests</span>
       )}
       <br />
-      <Link
+      <button
         className="btn btn-primary m-2"
-        href={`/friendrequests?viewing=${
-          viewing === "recieved" ? "sent" : "recieved"
-        }`}
+        onClick={() =>
+          setViewing((prevViewing) =>
+            prevViewing === "recieved" ? "sent" : "recieved"
+          )
+        }
       >
         {viewing === "recieved"
           ? "View sent requests"
           : "View recieved requests"}
-      </Link>
+      </button>
 
       <br className="d-sm-none" />
       <Link href={"/chat"} className="btn btn-danger m-2">
