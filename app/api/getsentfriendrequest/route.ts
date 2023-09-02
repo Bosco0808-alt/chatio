@@ -59,7 +59,7 @@ export async function GET(req: Request) {
   }
   const friendRequests = await prisma.friendRequest.findMany({
     where: {
-      recieverId: user.id,
+      authorId: user.id,
     },
   });
   return new Response(

@@ -27,7 +27,7 @@ const Sidebar: FC<SidebarProps> = ({ _friends }: SidebarProps) => {
       <br />
       <Link
         className="btn btn-secondary sidebar-item mt-2"
-        href={"/friendrequests"}
+        href={"/friendrequests?viewing=recieved"}
       >
         view friend requests
       </Link>
