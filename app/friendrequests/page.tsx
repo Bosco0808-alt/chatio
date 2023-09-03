@@ -1,8 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useState } from "react";
-import useRedirectIfNotLoggedIn from "@/utils/useredirectifnotloggedin";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface FriendRequest {
@@ -20,10 +19,10 @@ interface ResBody {
 type viewing = "recieved" | "sent";
 
 const FriendRequests = () => {
+  const [error, setError] = useState(false);
   const router = useRouter();
   // @ts-ignore
   const [viewing, setViewing] = useState<viewing>("recieved");
-  useRedirectIfNotLoggedIn();
   const [friendRequests, setFriendRequests] = useState<FriendRequest[]>([]);
   useEffect(() => {
     (async () => {
@@ -38,8 +37,9 @@ const FriendRequests = () => {
       const { error, message, friendRequests }: ResBody = await res.json();
       if (error) {
         console.error(message);
-        return;
+        router.replace("/");
       }
+      setError(error);
       setFriendRequests(friendRequests || []);
     })();
   }, [viewing]);
