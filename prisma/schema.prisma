@@ -32,9 +32,10 @@ model Message {
 }
 
 model FriendRequest {
-  id         String @id @default(uuid())
-  author     User   @relation("authorFriendRequestRelation", fields: [authorId], references: [id])
-  authorId   String
-  reciever   User   @relation("recieverFriendRequestRelation", fields: [recieverId], references: [id])
-  recieverId String
+  id          String  @id @default(uuid())
+  author      User    @relation("authorFriendRequestRelation", fields: [authorId], references: [id])
+  authorId    String
+  reciever    User    @relation("recieverFriendRequestRelation", fields: [recieverId], references: [id])
+  recieverId  String
+  description String?
 }
