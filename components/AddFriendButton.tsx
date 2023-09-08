@@ -6,12 +6,13 @@ import { useState } from "react";
 
 export default function FriendRequestPopup() {
   const [username, setUsername] = useState("");
-  const setParentUsername = (username: string) => {
-    setUsername(username);
-  };
   const handleClick = async () => {
     const result = await swal.fire({
-      html: <AddFriendRequestPopup setParentUsername={setParentUsername} />,
+      html: (
+        <AddFriendRequestPopup
+          setParentUsername={(username: string) => setUsername(username)}
+        />
+      ),
       cancelButtonText: "Cancel",
       showCancelButton: true,
       confirmButtonText: "Ok",
