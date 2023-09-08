@@ -2,7 +2,7 @@
 
 import AddFriendRequestPopup from "@/components/AddFriendRequestPopup";
 import swal from "@/lib/sweetalert";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function FriendRequestPopup() {
   const [username, setUsername] = useState("");
@@ -17,7 +17,8 @@ export default function FriendRequestPopup() {
       confirmButtonText: "Ok",
     });
     if (result.isConfirmed) {
-      setParentUsername("");
+      console.log(username);
+      setUsername("");
       await swal.fire({
         text: "Todo: Friend request sent" + username,
         icon: "success",
