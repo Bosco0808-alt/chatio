@@ -51,7 +51,11 @@ const FriendRequests = () => {
       {friendRequests.length !== 0 ? (
         <ul>
           {friendRequests.map((friendRequest) => (
-            <li key={friendRequest.id}>{friendRequest.authorId}</li>
+            <li key={friendRequest.id}>
+              {viewing === "recieved"
+                ? friendRequest.authorId
+                : friendRequest.recieverId}
+            </li>
           ))}
         </ul>
       ) : (
