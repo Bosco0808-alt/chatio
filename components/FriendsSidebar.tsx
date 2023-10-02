@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FC } from "react";
-import FriendRequestPopup from "@/components/AddFriendButton";
+
 interface SidebarProps {
   _friends: {
     id: string;
@@ -10,6 +11,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = ({ _friends }: SidebarProps) => {
+  const router = useRouter()
   return (
     <div
       className="sidebar bg-light"
@@ -24,7 +26,7 @@ const Sidebar: FC<SidebarProps> = ({ _friends }: SidebarProps) => {
       ) : (
         <div className="sidebar-item">You have no friends</div>
       )}
-      <FriendRequestPopup />
+      <Link className="btn btn-primary" href={"/addfriend"}>add friend</Link>
       <br />
       <Link
         className="btn btn-secondary sidebar-item mt-2"
