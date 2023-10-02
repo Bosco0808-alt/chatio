@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import { timingSafeEqual } from "crypto";
 
 interface ReqBody {
-  username: string;
+  recieverusername: string;
   description: string;
 }
 
@@ -56,7 +56,17 @@ export async function POST(req: Request) {
     );
   }
 
-  const { description, username: recieverusername }: ReqBody = await req.json();
+  const { recieverusername, description }: ReqBody = await req.json();
+
+  if (!recieverusername || !description) {
+    return new Response(
+      JSON.stringify({
+        error: true,
+        message: "BAD_REQUEST",
+      }),
+      { status: 400 }
+    );
+  }
 
   const reciever = await prisma.user.findUnique({
     where: {
