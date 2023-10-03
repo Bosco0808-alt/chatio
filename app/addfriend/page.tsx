@@ -1,7 +1,9 @@
 "use client";
 import swal from "@/lib/sweetalert";
+
+import useRedirectIfNotLoggedIn from "@/utils/useredirectifnotloggedin";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 interface ResBody {
   error: boolean;
@@ -13,51 +15,61 @@ const AddFriend = () => {
   const [description, setDescription] = useState("");
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault();
-      setDisabled(true);
-      if (!username || !description) {
-        await swal.fire({
-          icon: "error",
-          title: "Username or description required",
-        });
-        return;
-      }
-      const res = await fetch("/api/addfriend", {
-        method: "POST",
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/checkloginstatus", {
         headers: new Headers({
           Authorization: process.env.NEXT_PUBLIC_AUTHKEY || "",
         }),
-        body: JSON.stringify({
-          recieverusername: username,
-          description,
-        }),
       });
-      const { error, message }: ResBody = await res.json();
-      if (error) {
-        if (message === "USER_NOT_FOUND") {
-          await swal.fire({
-            icon: "error",
-            title: "The user you wish to friend was not found",
-            text: "Check for any typos in the username",
-          });
-          return;
-        }
+      const { auth } = await res.json();
+      if (!auth) {
+        router.replace("/");
+      }
+    })();
+  }, []);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setDisabled(true);
+    if (!username || !description) {
+      await swal.fire({
+        icon: "error",
+        title: "Username or description required",
+      });
+      return;
+    }
+    const res = await fetch("/api/addfriendrequest", {
+      method: "POST",
+      headers: new Headers({
+        Authorization: process.env.NEXT_PUBLIC_AUTHKEY || "",
+      }),
+      body: JSON.stringify({
+        recieverusername: username.trim(),
+        description,
+      }),
+    });
+    const { error, message }: ResBody = await res.json();
+    if (error) {
+      if (message === "USER_NOT_FOUND") {
         await swal.fire({
           icon: "error",
-          title: "Oops, an error occurred",
+          title: "The user you wish to friend was not found",
+          text: "Check for any typos in the username",
         });
         return;
       }
       await swal.fire({
-        icon: "success",
-        title: "Friend request sent",
-        text: "Wait for your friend to accept it!",
+        icon: "error",
+        title: "Oops, an error occurred",
       });
-    } finally {
-      router.back();
+      return;
     }
+    await swal.fire({
+      icon: "success",
+      title: "Friend request sent",
+      text: "Wait for your friend to accept it!",
+    });
+    router.back();
   };
   return (
     <form onSubmit={onSubmit}>
