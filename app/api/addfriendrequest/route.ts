@@ -73,7 +73,6 @@ export async function POST(req: Request) {
       username: recieverusername,
     },
   });
-
   if (!reciever) {
     return new Response(
       JSON.stringify({
@@ -83,7 +82,28 @@ export async function POST(req: Request) {
       { status: 404 }
     );
   }
-
+  const friendrequestalreadyexists = await prisma.friendRequest.findFirst({
+    where: {
+      author: {
+        id: user.id,
+      },
+      AND: {
+        reciever: {
+          id: reciever.id,
+        },
+      },
+    },
+  });
+  if (friendrequestalreadyexists) {
+    return new Response(
+      JSON.stringify({
+        error: true,
+        message: "FRIEND_REQUEST_ALREADY_EXISTS",
+      }),
+      { status: 400 }
+    );
+  }
+  // TODO: check if user is friended + check if self friend
   await prisma.friendRequest.create({
     data: {
       author: {

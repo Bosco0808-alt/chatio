@@ -58,6 +58,7 @@ const AddFriend = () => {
         });
         return;
       }
+      // TODO: error handling for refriending
       await swal.fire({
         icon: "error",
         title: "Oops, an error occurred",
