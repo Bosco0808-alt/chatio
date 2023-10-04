@@ -95,6 +95,7 @@ const Createuser = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="form-control m-2"
+          placeholder="Enter username"
           required
         />
         <label className="m-2">password:</label>
@@ -104,6 +105,7 @@ const Createuser = () => {
           onChange={(e) => setPassword(e.target.value)}
           className="form-control m-2"
           type="password"
+          placeholder="Enter password"
           required
         />
       </div>
