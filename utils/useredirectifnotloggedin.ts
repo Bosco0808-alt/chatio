@@ -1,15 +1,19 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAtom } from "jotai";
-import { authAtom } from "@/atomconfig";
 
 export default function useRedirectIfNotLoggedIn() {
   const router = useRouter();
-  const [_auth] = useAtom(authAtom);
-
   useEffect(() => {
-    if (!_auth) {
-      router.replace("/");
-    }
-  }, [_auth]);
+    (async () => {
+      const res = await fetch("/api/checkloginstatus", {
+        headers: new Headers({
+          Authorization: process.env.NEXT_PUBLIC_AUTHKEY || "",
+        }),
+      });
+      const { auth } = await res.json();
+      if (!auth) {
+        router.replace("/");
+      }
+    })();
+  }, []);
 }

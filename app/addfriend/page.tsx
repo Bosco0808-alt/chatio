@@ -15,19 +15,7 @@ const AddFriend = () => {
   const [description, setDescription] = useState("");
   const [disabled, setDisabled] = useState(false);
   const router = useRouter();
-  useEffect(() => {
-    (async () => {
-      const res = await fetch("/api/checkloginstatus", {
-        headers: new Headers({
-          Authorization: process.env.NEXT_PUBLIC_AUTHKEY || "",
-        }),
-      });
-      const { auth } = await res.json();
-      if (!auth) {
-        router.replace("/");
-      }
-    })();
-  }, []);
+  useRedirectIfNotLoggedIn();
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setDisabled(true);
