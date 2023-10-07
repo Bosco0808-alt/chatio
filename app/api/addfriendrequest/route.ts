@@ -38,6 +38,9 @@ export async function POST(req: Request) {
     where: {
       username: username,
     },
+    include: {
+      friends: true,
+    },
   });
 
   const password = cookieList.get("password")?.value;
@@ -73,7 +76,6 @@ export async function POST(req: Request) {
       username: recieverusername,
     },
   });
-
   if (!reciever) {
     return new Response(
       JSON.stringify({
@@ -83,7 +85,48 @@ export async function POST(req: Request) {
       { status: 404 }
     );
   }
-
+  const friendrequestalreadyexists = await prisma.friendRequest.findFirst({
+    where: {
+      author: {
+        id: user.id,
+      },
+      AND: {
+        reciever: {
+          id: reciever.id,
+        },
+      },
+    },
+  });
+  if (recieverusername === username) {
+    return new Response(
+      JSON.stringify({
+        error: true,
+        message: "SELF_FRIEND",
+      }),
+      { status: 400 }
+    );
+  }
+  if (friendrequestalreadyexists) {
+    return new Response(
+      JSON.stringify({
+        error: true,
+        message: "FRIEND_REQUEST_ALREADY_EXISTS",
+      }),
+      { status: 400 }
+    );
+  }
+  const isalreadyfriended = user.friends.find(
+    (friend) => friend.username === recieverusername
+  );
+  if (isalreadyfriended) {
+    return new Response(
+      JSON.stringify({
+        error: true,
+        message: "ALREADY_FRIENDED",
+      }),
+      { status: 400 }
+    );
+  }
   await prisma.friendRequest.create({
     data: {
       author: {
