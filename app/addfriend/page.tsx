@@ -58,6 +58,27 @@ const AddFriend = () => {
         });
         return;
       }
+      if (message === "SELF_FRIEND") {
+        await swal.fire({
+          icon: "error",
+          title: "You cannot friend yourself",
+        });
+        return;
+      }
+      if (message === "FRIEND_REQUEST_ALREADY_EXISTS") {
+        await swal.fire({
+          icon: "error",
+          title: "Friend request already exists",
+        });
+        return;
+      }
+      if (message === "ALREADY_FRIENDED") {
+        await swal.fire({
+          icon: "error",
+          title: "You are already friends with this user",
+        });
+        return;
+      }
       // TODO: error handling for refriending
       await swal.fire({
         icon: "error",
