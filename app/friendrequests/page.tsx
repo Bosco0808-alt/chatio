@@ -8,6 +8,7 @@ interface FriendRequest {
   id: string;
   authorId: string;
   recieverId: string;
+  [key: string]: any;
 }
 
 interface ResBody {
@@ -45,11 +46,7 @@ const FriendRequests = () => {
       {friendRequests.length !== 0 ? (
         <ul>
           {friendRequests.map((friendRequest) => (
-            <li key={friendRequest.id}>
-              {viewing === "recieved"
-                ? friendRequest.authorId
-                : friendRequest.recieverId}
-            </li>
+            <li key={friendRequest.id}>{friendRequest.username}</li>
           ))}
         </ul>
       ) : (

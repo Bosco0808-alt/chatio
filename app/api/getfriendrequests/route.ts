@@ -3,6 +3,13 @@ import { cookies } from "next/headers";
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 
+interface FriendRequest {
+  id: string;
+  authorId: string;
+  recieverId: string;
+  [key: string]: any;
+}
+
 export async function GET(req: Request) {
   const cookieList = cookies();
   const headerList = headers();
@@ -57,11 +64,22 @@ export async function GET(req: Request) {
       { status: 401 }
     );
   }
-  const friendRequests = await prisma.friendRequest.findMany({
+  const _friendRequests = await prisma.friendRequest.findMany({
     where: {
       recieverId: user.id,
     },
   });
+  const friendRequests: FriendRequest[] = Array.from(_friendRequests);
+  for (let i = 0; i < friendRequests.length; i++) {
+    const friendRequest = _friendRequests[i];
+    const user = await prisma.user.findUnique({
+      where: {
+        id: friendRequest.authorId,
+      },
+    });
+
+    friendRequests[i].username = user?.username;
+  }
   return new Response(
     JSON.stringify({
       error: false,
